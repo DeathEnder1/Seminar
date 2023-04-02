@@ -6,7 +6,6 @@ from register import *
 from add_withdraw import *
 from transfer import *
 from others import *
-
 receiver=''
 money_to_send=0
 print("Starting...")
@@ -26,9 +25,9 @@ if __name__ == '__main__':
             )""")
         application= Application.builder().token(keys.API_KEY).build()
         application.add_handler(CommandHandler("start", start_command))
-        application.add_handler(CallbackQueryHandler(button))
+        
         application.add_handler(CommandHandler("help", help_command))
-        # application.add_handler(CommandHandler("register", register))
+        application.add_handler(CommandHandler("show_username", show_username))
         application.add_handler(ConversationHandler(
             [CommandHandler("register", register)],
             states={

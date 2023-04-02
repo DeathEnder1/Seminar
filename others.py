@@ -49,3 +49,8 @@ async def show_data(update,context):
 async def show_uid(update,context):
     uid= update.message.chat_id
     await update.message.reply_text("Your uid: {}".format(uid))
+
+async def show_username(update, context):
+    last= update.message.chat.last_name
+    first= update.message.chat.first_name
+    await update.message.reply_text("Your username: {} {}".format(last, first))
