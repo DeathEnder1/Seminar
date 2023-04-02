@@ -1,6 +1,8 @@
 from telegram.ext import *
 from telegram import *
 import sqlite3
+import requests
+import const as keys
 conn = sqlite3.connect('Banking.db', check_same_thread=False)
 c= conn.cursor()
 import os
@@ -99,5 +101,9 @@ async def transferring(update,context):
                     """.format(receiver_num+money_to_send,receiver))
         conn.commit()
         await update.message.reply_text("Transfer completed")
+        bot_message = "You have received {} from user {}. \nYour balance is now {}".format(money_to_send, sender, receiver_num+money_to_send)
+        send_text = 'https://api.telegram.org/bot' + keys.API_KEY + '/sendMessage?chat_id=' + receiver + '&text=' + bot_message
+        response = requests.get(send_text)
+        response.json()
         return ConversationHandler.END
     
