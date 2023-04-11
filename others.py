@@ -51,7 +51,11 @@ async def show_uid(update,context):
     await update.message.reply_text("Your uid: {}".format(uid))
 
 async def show_username(update, context):
-    # last= update.message.chat.last_name
-    # first= update.message.chat.first_name
-    title=update.message.chat.title
-    await update.message.reply_text("Your username: {} ".format(title))
+    
+    if update.message.chat.type in ['group','supergroup']:
+        title=update.message.chat.title
+        await update.message.reply_text("Your username: {} ".format(title))
+    else:
+        last= update.message.chat.last_name
+        first= update.message.chat.first_name
+        await update.message.reply_text("Your username: {} {}".format(last, first))

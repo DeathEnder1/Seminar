@@ -10,9 +10,17 @@ async def register(update, context):
     if update.message.chat.type in ["group", "supergroup"]:
         name=update.message.chat.title
     else:
+        
         last = update.message.chat.last_name
         first= update.message.chat.first_name
-        name= last+" "+ first
+        if last==None:
+            last=''
+            name=first
+        elif name==None:
+            name=''
+            name=last
+        else:
+            name= last+" "+ first
     c.execute("SELECT uid FROM fbank1 WHERE uid={}".format(uid))
     find=c.fetchone()
     if find is None:
