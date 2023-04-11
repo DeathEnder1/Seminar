@@ -6,12 +6,17 @@ c= conn.cursor()
 PW=0,1
 async def register(update, context):
     uid = update.message.chat_id
-    last = update.message.chat.last_name
+    name=""
+    if update.message.chat.type in ["group", "supergroup"]:
+        name=update.message.chat.title
+    else:
+        last = update.message.chat.last_name
+        first= update.message.chat.first_name
+        name= last+" "+ first
     c.execute("SELECT uid FROM fbank1 WHERE uid={}".format(uid))
     find=c.fetchone()
-    
     if find is None:
-        c.execute("INSERT INTO fbank1 (uid,last,num) VALUES (?, ?, ?)",(uid,last,1000))
+        c.execute("INSERT INTO fbank1 (uid,last,num) VALUES (?, ?, ?)",(uid,name,1000))
         await update.message.reply_text("Please input the password you want to create")
         conn.commit()
         return PW

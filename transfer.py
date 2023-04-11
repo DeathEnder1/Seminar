@@ -3,6 +3,7 @@ from telegram import *
 import sqlite3
 import requests
 import const as keys
+from requests.exceptions import ConnectTimeout
 conn = sqlite3.connect('Banking.db', check_same_thread=False)
 c= conn.cursor()
 import os
@@ -19,6 +20,7 @@ reply_kb=[
 markup = ReplyKeyboardMarkup(reply_kb, one_time_keyboard=True)
 TRANSFER,CASH=0,1
 PW=0,1
+
 async def transfer_command(update, context):
     uid = update.message.chat_id
     c.execute("SELECT uid FROM fbank1 WHERE uid={}".format(uid))
@@ -32,8 +34,8 @@ async def transfer_command(update, context):
 async def receive_user(update, context)->int:
     global receiver
     uid= update.message.text
-    receiver_uid=str(update.message.chat_id)
-    if uid==receiver_uid: 
+    sender_uid=str(update.message.chat_id)
+    if uid==sender_uid: 
         await update.message.reply_text("You can't transfer money to yourself") 
         return ConversationHandler.END
     else:
@@ -103,7 +105,10 @@ async def transferring(update,context):
         await update.message.reply_text("Transfer completed")
         bot_message = "You have received {} from user {}. \nYour balance is now {}".format(money_to_send, sender, receiver_num+money_to_send)
         send_text = 'https://api.telegram.org/bot' + keys.API_KEY + '/sendMessage?chat_id=' + receiver + '&text=' + bot_message
-        response = requests.get(send_text)
-        response.json()
+        try:
+            response = requests.get(send_text)
+            response.json()
+        except ConnectTimeout:
+            print("time out")
         return ConversationHandler.END
     
