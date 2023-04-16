@@ -75,6 +75,3 @@ if __name__ == '__main__':
         conn.commit()
     except Exception as error:
         print('Cause: {}'.format(error))
-
-
-        
